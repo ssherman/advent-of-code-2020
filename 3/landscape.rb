@@ -29,10 +29,6 @@ class Landscape
     position == '#'
   end
 
-  def not_tree?
-    !is_tree?
-  end
-
   def count_trees(right, down)
     tree_count = 0
     while true
