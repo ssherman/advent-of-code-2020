@@ -11,13 +11,13 @@ def passport_valid?(passport, requirements)
   requirements.each do |req|
     case req
     when :byr
-      return false unless /[0-9]{4}/.match? passport.data[:byr]
+      return false unless /[0-9]{4}$/.match? passport.data[:byr]
       return false unless passport.data[:byr].to_i >= 1920 && passport.data[:byr].to_i <= 2002
     when :iyr
-      return false unless /[0-9]{4}/.match? passport.data[:iyr]
+      return false unless /[0-9]{4}$/.match? passport.data[:iyr]
       return false unless passport.data[:iyr].to_i >= 2010 && passport.data[:iyr].to_i <= 2020
     when :eyr
-      return false unless /[0-9]{4}/.match? passport.data[:eyr]
+      return false unless /[0-9]{4}$/.match? passport.data[:eyr]
       return false unless passport.data[:eyr].to_i >= 2020 && passport.data[:eyr].to_i <= 2030
     when :hgt
       match_data = /([0-9]+)(cm|in)/.match(passport.data[:hgt])
@@ -30,11 +30,13 @@ def passport_valid?(passport, requirements)
         return false unless number >= 59 && number <= 76
       end
     when :hcl
-      return false unless /#[0-9a-f]{6}/.match? passport.data[:hcl]
+      return false unless /\#[0-9a-f]{6}$/.match? passport.data[:hcl]
     when :ecl
       return false unless ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].include?(passport.data[:ecl])
     when :pid
-      return false unless /[0-9]{9}/.match? passport.data[:pid]
+      return false unless /[0-9]{9}$/.match? passport.data[:pid]
+    else
+      return false
     end
   end
   true
@@ -42,7 +44,11 @@ end
 
 valid = 0
 
-valid_passports = passports.passport_data.each do |passport|
-  valid += 1 if passport_valid?(passport, requirements)
+passports.passport_data.each do |passport|
+  if passport_valid?(passport, requirements)
+    pp passport.data
+    puts "valid: #{passport.data.inspect}"
+    valid += 1 
+  end
 end
 puts "there are #{valid} valid passports"

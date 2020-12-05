@@ -9,7 +9,7 @@ class Passports
       parts.delete_if { |p| p.strip == ''}
       password_attributes = parts.map do |part|
         key, value = part.split(":")
-        {key.to_sym => value}
+        {key.to_sym => value.downcase}
       end.inject(:merge)
 
       Passport.new(password_attributes)
